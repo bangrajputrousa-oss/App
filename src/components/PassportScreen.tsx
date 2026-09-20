@@ -41,7 +41,7 @@ export const PassportScreen: React.FC<PassportScreenProps> = ({
   };
 
   return (
-    <div id="screen-my-passport" className="flex-1 flex flex-col overflow-y-auto bg-[#131416] text-white">
+    <div id="screen-my-passport" className="flex-1 flex flex-col overflow-y-auto bg-[#211F1F] text-white">
       {/* Green Header */}
       <div className="bg-[#006837] px-4 py-3.5 flex items-center gap-3 shadow-md shrink-0">
         <button
@@ -59,8 +59,8 @@ export const PassportScreen: React.FC<PassportScreenProps> = ({
       {/* Main Content */}
       <div className="p-4 flex flex-col gap-4 flex-1">
         {/* Deposit Card */}
-        <div className="w-full bg-[#222428] rounded-2xl p-4 flex flex-col gap-1 shadow-md border border-neutral-800/80">
-          <span className="text-neutral-400 text-xs font-medium">
+        <div className="w-full bg-[#2C3033] rounded-2xl p-4 flex flex-col gap-1 shadow-md border border-neutral-700/60">
+          <span className="text-neutral-300 text-xs font-medium">
             Amount deposit
           </span>
           <span className="text-white font-bold text-base tracking-wide">
@@ -69,15 +69,15 @@ export const PassportScreen: React.FC<PassportScreenProps> = ({
         </div>
 
         {/* Passport Accordion Card */}
-        <div className="w-full bg-[#222428] rounded-2xl overflow-hidden shadow-lg border border-neutral-800/80">
+        <div className="w-full bg-[#2C3033] rounded-2xl overflow-hidden shadow-lg border border-neutral-700/60">
           {/* Header */}
           <div
             id="passport-accordion-toggle"
             onClick={() => setIsOpen(!isOpen)}
-            className="p-4 flex items-center justify-between cursor-pointer hover:bg-neutral-800/40 transition-colors border-b border-neutral-700/50"
+            className="p-4 flex items-center justify-between cursor-pointer hover:bg-neutral-700/40 transition-colors border-b border-neutral-700/50"
           >
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-neutral-800 flex items-center justify-center text-white border border-neutral-700/60">
+              <div className="w-9 h-9 rounded-xl bg-neutral-800/90 flex items-center justify-center text-[#7BE4C2] border border-neutral-700/60">
                 <Globe className="w-5 h-5" />
               </div>
               <h2 className="text-white font-bold text-base">

@@ -73,6 +73,7 @@ export const INITIAL_STATE: AppState = {
     backgroundImage: '',
     loginScreenImage: '',
     headerLogo: '',
+    headerLogoScale: 1.5,
     homeDigitalIdImage: '',
   },
 };

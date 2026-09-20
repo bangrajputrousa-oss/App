@@ -35,6 +35,7 @@ export interface VisualSettings {
   backgroundImage: string;
   loginScreenImage: string;
   headerLogo?: string;
+  headerLogoScale?: number; // 1.0, 1.5 (1x bigger), or 2.0
   homeDigitalIdImage?: string; // Dedicated directly uploaded Home Page Digital ID card
 }
 

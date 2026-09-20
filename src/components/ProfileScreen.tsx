@@ -24,7 +24,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   };
 
   return (
-    <div id="screen-my-profile" className="flex-1 flex flex-col overflow-y-auto bg-[#131416] text-white">
+    <div id="screen-my-profile" className="flex-1 flex flex-col overflow-y-auto bg-[#211F1F] text-white">
       {/* Green Header Bar */}
       <div className="bg-[#006837] px-4 py-3.5 flex items-center gap-3 shadow-md shrink-0">
         <button
@@ -44,7 +44,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         {/* Profile Card */}
         <div
           id="profile-main-card"
-          className="w-full bg-[#222428] rounded-2xl p-5 flex flex-col items-center text-center shadow-lg border border-neutral-800/60"
+          className="w-full bg-[#2C3033] rounded-2xl p-5 flex flex-col items-center text-center shadow-lg border border-neutral-700/50"
         >
           {/* Centered Avatar */}
           <div className="mb-3">
@@ -52,12 +52,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               src={visuals.profilePhoto}
               name={personalDetails.name}
               size="xl"
-              className="w-20 h-20 rounded-xl shadow-md border-2 border-neutral-700/60"
+              className="w-20 h-20 rounded-xl shadow-md border-2 border-neutral-600/60"
             />
           </div>
 
           {/* User Full Name */}
-          <h2 className="text-white text-lg font-bold tracking-wide">
+          <h2 className="text-white text-lg font-bold tracking-wide font-sans">
             {personalDetails.name}
           </h2>
 
@@ -67,11 +67,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <button
               id="btn-copy-profile-id"
               onClick={handleCopyId}
-              className="p-1 text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+              className="p-1 text-[#7BE4C2] hover:text-emerald-300 transition-colors cursor-pointer"
               title="Copy ID Number"
             >
               {copied ? (
-                <Check className="w-4 h-4 text-emerald-400 animate-in zoom-in" />
+                <Check className="w-4 h-4 text-[#7BE4C2] animate-in zoom-in" />
               ) : (
                 <Copy className="w-4 h-4" />
               )}
@@ -95,9 +95,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div
             id="btn-my-passport"
             onClick={() => onNavigate('passport')}
-            className="bg-[#222428] hover:bg-[#282b30] border border-neutral-800/80 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-md transition-all active:scale-[0.98]"
+            className="bg-[#2C3033] hover:bg-[#34393D] border border-neutral-700/50 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-md transition-all active:scale-[0.98]"
           >
-            <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center text-emerald-400 border border-neutral-700/40">
+            <div className="w-10 h-10 rounded-xl bg-neutral-800/90 flex items-center justify-center text-[#7BE4C2] border border-neutral-700/40">
               <Globe className="w-5 h-5" />
             </div>
             <span className="text-white font-bold text-sm">
@@ -109,9 +109,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div
             id="btn-my-resident-id"
             onClick={() => onNavigate('resident_id')}
-            className="bg-[#222428] hover:bg-[#282b30] border border-neutral-800/80 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-md transition-all active:scale-[0.98]"
+            className="bg-[#2C3033] hover:bg-[#34393D] border border-neutral-700/50 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-md transition-all active:scale-[0.98]"
           >
-            <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center text-emerald-400 border border-neutral-700/40">
+            <div className="w-10 h-10 rounded-xl bg-neutral-800/90 flex items-center justify-center text-[#7BE4C2] border border-neutral-700/40">
               <CreditCard className="w-5 h-5" />
             </div>
             <span className="text-white font-bold text-sm">
@@ -123,9 +123,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div
             id="btn-my-visa"
             onClick={() => onNavigate('visa')}
-            className="bg-[#222428] hover:bg-[#282b30] border border-neutral-800/80 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-md transition-all active:scale-[0.98]"
+            className="bg-[#2C3033] hover:bg-[#34393D] border border-neutral-700/50 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-md transition-all active:scale-[0.98]"
           >
-            <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center text-emerald-400 border border-neutral-700/40">
+            <div className="w-10 h-10 rounded-xl bg-neutral-800/90 flex items-center justify-center text-[#7BE4C2] border border-neutral-700/40">
               <FileText className="w-5 h-5" />
             </div>
             <span className="text-white font-bold text-sm">
@@ -137,9 +137,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <div
             id="btn-my-driving-license"
             onClick={() => onNavigate('license')}
-            className="bg-[#222428] hover:bg-[#282b30] border border-neutral-800/80 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-md transition-all active:scale-[0.98]"
+            className="bg-[#2C3033] hover:bg-[#34393D] border border-neutral-700/50 rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-md transition-all active:scale-[0.98]"
           >
-            <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center text-emerald-400 border border-neutral-700/40">
+            <div className="w-10 h-10 rounded-xl bg-neutral-800/90 flex items-center justify-center text-[#7BE4C2] border border-neutral-700/40">
               <Award className="w-5 h-5" />
             </div>
             <span className="text-white font-bold text-sm">
@@ -151,7 +151,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         {/* Travel Records Banner Card */}
         <div
           id="card-travel-records"
-          className="relative w-full rounded-2xl overflow-hidden min-h-[90px] p-4 flex flex-col justify-between cursor-pointer shadow-md border border-neutral-800 group"
+          className="relative w-full rounded-2xl overflow-hidden min-h-[90px] p-4 flex flex-col justify-between cursor-pointer shadow-md border border-neutral-700/50 group"
           style={{
             background: 'linear-gradient(135deg, #093b22 0%, #064e3b 50%, #134e4a 100%)',
           }}

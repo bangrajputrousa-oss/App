@@ -16,7 +16,7 @@ export const PersonalDetailsScreen: React.FC<PersonalDetailsScreenProps> = ({
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <div id="screen-my-personal-details" className="flex-1 flex flex-col overflow-y-auto bg-[#131416] text-white">
+    <div id="screen-my-personal-details" className="flex-1 flex flex-col overflow-y-auto bg-[#211F1F] text-white">
       {/* Green Header */}
       <div className="bg-[#006837] px-4 py-3.5 flex items-center gap-3 shadow-md shrink-0">
         <button
@@ -34,12 +34,12 @@ export const PersonalDetailsScreen: React.FC<PersonalDetailsScreenProps> = ({
       {/* Main Container */}
       <div className="p-4 flex flex-col gap-4 flex-1">
         {/* Accordion Card */}
-        <div className="w-full bg-[#222428] rounded-2xl overflow-hidden shadow-lg border border-neutral-800/80">
+        <div className="w-full bg-[#2C3033] rounded-2xl overflow-hidden shadow-lg border border-neutral-700/60">
           {/* Accordion Header */}
           <div
             id="personal-details-accordion-toggle"
             onClick={() => setIsOpen(!isOpen)}
-            className="p-4 flex items-center justify-between cursor-pointer hover:bg-neutral-800/40 transition-colors border-b border-neutral-700/50"
+            className="p-4 flex items-center justify-between cursor-pointer hover:bg-neutral-700/40 transition-colors border-b border-neutral-700/50"
           >
             <div className="flex items-center gap-3">
               <UserAvatar

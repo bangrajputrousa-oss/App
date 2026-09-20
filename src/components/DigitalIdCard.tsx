@@ -22,12 +22,12 @@ export const DigitalIdCard: React.FC<DigitalIdCardProps> = ({
       <div
         id="digital-resident-id-custom"
         onClick={onCardClick}
-        className="w-full rounded-2xl overflow-hidden shadow-xl border border-neutral-700/60 cursor-pointer transition-transform active:scale-[0.99]"
+        className="w-full rounded-2xl overflow-hidden shadow-xl border border-neutral-700/60 cursor-pointer transition-transform active:scale-[0.99] max-h-[200px] sm:max-h-[220px] flex items-center justify-center bg-[#211F1F]"
       >
         <img
           src={customCardImage}
           alt="Resident ID Card"
-          className="w-full h-auto object-cover"
+          className="w-full h-auto max-h-[200px] sm:max-h-[220px] object-contain rounded-xl"
         />
       </div>
     );

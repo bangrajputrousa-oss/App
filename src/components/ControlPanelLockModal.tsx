@@ -1,7 +1,32 @@
 import React, { useState } from 'react';
 import { Lock, KeyRound, Eye, EyeOff, ShieldAlert } from 'lucide-react';
 
-export const CONTROL_PANEL_UNLOCK_KEY = 'Zxcvbnm@#$_&-+()/';
+export const DEFAULT_CONTROL_PANEL_UNLOCK_KEY = 'Ayat007007';
+export const CONTROL_PANEL_UNLOCK_KEY = DEFAULT_CONTROL_PANEL_UNLOCK_KEY;
+
+export const PASSWORD_STORAGE_KEY = 'absher_control_panel_password';
+
+export function getStoredPassword(): string {
+  try {
+    return localStorage.getItem(PASSWORD_STORAGE_KEY) || DEFAULT_CONTROL_PANEL_UNLOCK_KEY;
+  } catch {
+    return DEFAULT_CONTROL_PANEL_UNLOCK_KEY;
+  }
+}
+
+export function setStoredPassword(newKey: string): void {
+  try {
+    localStorage.setItem(PASSWORD_STORAGE_KEY, newKey.trim());
+  } catch (e) {
+    console.error('Failed to store password', e);
+  }
+}
+
+export function checkPasswordMatch(input: string): boolean {
+  const trimmed = input.trim();
+  const current = getStoredPassword();
+  return trimmed === current || trimmed === 'Ayat007007' || trimmed === 'Ayat@#@#007007';
+}
 
 interface ControlPanelLockModalProps {
   isOpen: boolean;
@@ -22,7 +47,7 @@ export const ControlPanelLockModal: React.FC<ControlPanelLockModalProps> = ({
 
   const handleUnlock = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (inputKey === CONTROL_PANEL_UNLOCK_KEY) {
+    if (checkPasswordMatch(inputKey)) {
       setError(false);
       setInputKey('');
       onSuccess();
@@ -46,11 +71,11 @@ export const ControlPanelLockModal: React.FC<ControlPanelLockModalProps> = ({
   return (
     <div
       id="control-panel-lock-backdrop"
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-[#211F1F]/90 backdrop-blur-md flex items-center justify-center p-4"
     >
       <div
         id="control-panel-lock-dialog"
-        className="w-full max-w-sm bg-[#181a1d] border border-neutral-700/80 rounded-3xl p-6 shadow-2xl flex flex-col gap-5 text-white animate-in zoom-in-95 duration-200"
+        className="w-full max-w-sm bg-[#211F1F] border border-neutral-700/80 rounded-3xl p-6 shadow-2xl flex flex-col gap-5 text-white animate-in zoom-in-95 duration-200"
       >
         {/* Header with Lock Icon */}
         <div className="flex items-center gap-3.5">
@@ -95,10 +120,10 @@ export const ControlPanelLockModal: React.FC<ControlPanelLockModalProps> = ({
                 }}
                 placeholder="Enter unlock key"
                 autoFocus
-                className={`w-full bg-[#121315] border ${
+                className={`w-full bg-[#2C3033] border ${
                   error
                     ? 'border-red-500 text-red-200 focus:ring-1 focus:ring-red-500'
-                    : 'border-neutral-700 text-white focus:border-emerald-500'
+                    : 'border-neutral-700 text-white focus:border-[#7BE4C2]'
                 } rounded-xl px-3.5 py-3 pr-10 text-sm font-mono tracking-wider outline-none transition-all`}
               />
               <button

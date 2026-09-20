@@ -27,7 +27,7 @@ export const LicenseScreen: React.FC<LicenseScreenProps> = ({
   };
 
   return (
-    <div id="screen-my-driving-license" className="flex-1 flex flex-col overflow-y-auto bg-[#131416] text-white">
+    <div id="screen-my-driving-license" className="flex-1 flex flex-col overflow-y-auto bg-[#211F1F] text-white">
       <div className="bg-[#006837] px-4 py-3.5 flex items-center gap-3 shadow-md shrink-0">
         <button
           onClick={onBack}
@@ -41,9 +41,9 @@ export const LicenseScreen: React.FC<LicenseScreenProps> = ({
       </div>
 
       <div className="p-4 flex flex-col gap-4 flex-1">
-        <div className="w-full bg-[#222428] rounded-2xl overflow-hidden shadow-lg border border-neutral-800/80 p-5 flex flex-col gap-5 text-sm">
+        <div className="w-full bg-[#2C3033] rounded-2xl overflow-hidden shadow-lg border border-neutral-700/60 p-5 flex flex-col gap-5 text-sm">
           <div className="flex items-center gap-3 pb-2 border-b border-neutral-700/50">
-            <div className="w-9 h-9 rounded-xl bg-neutral-800 flex items-center justify-center text-white border border-neutral-700/60">
+            <div className="w-9 h-9 rounded-xl bg-neutral-800/90 flex items-center justify-center text-[#7BE4C2] border border-neutral-700/60">
               <Award className="w-5 h-5" />
             </div>
             <h2 className="text-white font-bold text-base">
@@ -60,9 +60,9 @@ export const LicenseScreen: React.FC<LicenseScreenProps> = ({
             </div>
             <button
               onClick={handleCopy}
-              className="p-1.5 text-emerald-400 hover:text-emerald-300 cursor-pointer"
+              className="p-1.5 text-[#7BE4C2] hover:text-emerald-300 cursor-pointer"
             >
-              {copied ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
+              {copied ? <Check className="w-5 h-5 text-[#7BE4C2]" /> : <Copy className="w-5 h-5" />}
             </button>
           </div>
 

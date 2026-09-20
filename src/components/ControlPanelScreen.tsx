@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, Upload, Trash2, Plus, Check, KeyRound, Download, FolderOpen, RotateCcw, Lock } from 'lucide-react';
 import { AppState, DocumentItem } from '../types';
+import { setStoredPassword, getStoredPassword } from './ControlPanelLockModal';
 
 interface ControlPanelScreenProps {
   appState: AppState;
@@ -100,9 +101,9 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
   };
 
   return (
-    <div id="screen-control-panel" className="flex-1 flex flex-col overflow-y-auto bg-[#131416] text-white">
+    <div id="screen-control-panel" className="flex-1 flex flex-col overflow-y-auto bg-[#211F1F] text-white">
       {/* Top Bar matching screenshot */}
-      <div className="bg-[#191b1e] border-b border-neutral-800 px-4 py-3.5 flex items-center gap-3 shadow-md shrink-0 sticky top-0 z-20">
+      <div className="bg-[#211F1F] border-b border-neutral-800 px-4 py-3.5 flex items-center gap-3 shadow-md shrink-0 sticky top-0 z-20">
         <button
           id="control-panel-btn-back"
           onClick={onBack}
@@ -112,13 +113,13 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
         </button>
         <h1 className="text-white text-lg font-bold tracking-tight flex items-center gap-2">
           <span>Control Panel</span>
-          <span className="text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-600/40 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
+          <span className="text-[10px] bg-emerald-950 text-[#7BE4C2] border border-[#7BE4C2]/40 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
             <Lock className="w-2.5 h-2.5" /> Unlocked
           </span>
         </h1>
         <div className="ml-auto flex items-center gap-2">
           {saveSuccess && (
-            <span className="text-xs bg-emerald-950 text-emerald-300 border border-emerald-600 px-2 py-0.5 rounded-full flex items-center gap-1 animate-in fade-in">
+            <span className="text-xs bg-emerald-950 text-[#7BE4C2] border border-emerald-600 px-2 py-0.5 rounded-full flex items-center gap-1 animate-in fade-in">
               <Check className="w-3.5 h-3.5" /> Saved!
             </span>
           )}
@@ -136,31 +137,91 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
 
       {/* Main Form Fields */}
       <div className="p-4 flex flex-col gap-4 flex-1 pb-28">
-        {/* Card: Header Logo (400x120px) */}
-        <div className="w-full bg-[#1e2024] rounded-2xl p-4 border border-neutral-800/80 flex flex-col gap-3">
+        {/* Card: Header Logo (400x120px) - 1x Bigger Display */}
+        <div className="w-full bg-[#1e2024] rounded-2xl p-4 border border-neutral-800/80 flex flex-col gap-3.5">
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold text-neutral-200">
               Header Logo (400×120 px)
             </span>
-            <span className="text-[11px] text-emerald-400 font-mono">
+            <span className="text-[11px] text-[#7BE4C2] bg-emerald-950/80 border border-[#7BE4C2]/40 px-2 py-0.5 rounded-full font-mono font-medium">
               Home Top Bar
             </span>
           </div>
           <p className="text-xs text-neutral-400 leading-relaxed">
             Upload custom 400×120px logo to replace "Absher Individual" header branding anytime.
           </p>
-          <div className="flex items-center gap-3.5">
-            <div className="w-36 h-12 rounded-xl bg-[#141517] border border-neutral-700/60 flex items-center justify-center overflow-hidden shrink-0 px-2">
+
+          {/* 1x Bigger Header Logo Preview Container */}
+          <div className="w-full flex flex-col gap-2.5">
+            <div className="w-full max-w-sm h-24 sm:h-28 rounded-2xl bg-gradient-to-r from-[#006837] to-[#00522c] border border-white/20 flex items-center justify-center overflow-hidden px-4 shadow-inner relative">
               {formData.visuals.headerLogo ? (
                 <img
                   src={formData.visuals.headerLogo}
                   alt="Header logo preview"
-                  className="w-full h-full object-contain"
+                  className="max-w-full max-h-full object-contain transition-transform duration-200"
+                  style={{
+                    transform: `scale(${formData.visuals.headerLogoScale || 1.5})`,
+                  }}
                 />
               ) : (
-                <span className="text-[11px] text-emerald-400 font-bold">Default Logo</span>
+                <div
+                  className="flex items-center gap-3 transition-transform duration-200"
+                  style={{
+                    transform: `scale(${formData.visuals.headerLogoScale || 1.5})`,
+                  }}
+                >
+                  <div className="w-12 h-12 rounded-full bg-white/20 border border-white/30 flex items-center justify-center backdrop-blur-xs shadow-inner">
+                    <span className="text-white text-xl font-bold font-arabic">أبشر</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-white text-base font-bold tracking-wide leading-tight font-sans">
+                      Absher Individual
+                    </span>
+                    <span className="text-emerald-100/90 text-xs font-arabic font-medium -mt-0.5">
+                      أفراد
+                    </span>
+                  </div>
+                </div>
               )}
+              <span className="absolute bottom-1.5 right-2 text-[10px] text-white/70 font-mono bg-black/40 px-1.5 py-0.5 rounded">
+                Header Live Preview ({formData.visuals.headerLogoScale ? `${formData.visuals.headerLogoScale}x` : '1.5x (1x Bigger)'})
+              </span>
             </div>
+
+            {/* Header Logo Size Selector */}
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-xs text-neutral-300 font-medium">Header Logo Size:</span>
+              <div className="flex items-center gap-1.5 bg-[#141517] p-1 rounded-xl border border-neutral-700/60">
+                {[
+                  { label: 'Standard (1.0x)', val: 1.0 },
+                  { label: '1x Bigger (1.5x)', val: 1.5 },
+                  { label: '2x Bigger (2.0x)', val: 2.0 },
+                ].map((scaleOpt) => {
+                  const currentScale = formData.visuals.headerLogoScale ?? 1.5;
+                  const isSelected = Math.abs(currentScale - scaleOpt.val) < 0.05;
+                  return (
+                    <button
+                      key={scaleOpt.val}
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          visuals: { ...prev.visuals, headerLogoScale: scaleOpt.val },
+                        }))
+                      }
+                      className={`px-2.5 py-1 text-[11px] font-semibold rounded-lg transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#006837] text-white shadow-sm'
+                          : 'text-neutral-400 hover:text-white'
+                      }`}
+                    >
+                      {scaleOpt.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <input
               type="file"
               ref={logoInputRef}
@@ -175,12 +236,13 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
                 )
               }
             />
-            <div className="flex items-center gap-2">
+
+            <div className="flex items-center gap-2 pt-1">
               <button
                 onClick={() => logoInputRef.current?.click()}
                 className="px-3.5 py-2.5 bg-[#25282c] hover:bg-[#2e3238] text-neutral-200 text-xs font-semibold rounded-xl flex items-center gap-2 border border-neutral-700/60 cursor-pointer shadow-sm active:scale-95 transition-all"
               >
-                <Upload className="w-4 h-4" />
+                <Upload className="w-4 h-4 text-[#7BE4C2]" />
                 <span>Upload Logo</span>
               </button>
               {formData.visuals.headerLogo && (
@@ -744,12 +806,12 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
       </div>
 
       {/* Sticky Bottom Actions Bar (matches Screenshot 6 exactly) */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#17181a]/95 backdrop-blur-md border-t border-neutral-800 p-4 flex items-center gap-3 z-30">
+      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#211F1F]/95 backdrop-blur-md border-t border-neutral-800 p-4 flex items-center gap-3 z-30">
         {/* Save Changes button */}
         <button
           id="btn-save-changes"
           onClick={handleSaveChanges}
-          className="flex-1 py-3 px-4 bg-[#557a68] hover:bg-[#436453] active:bg-[#008744] text-white font-semibold text-sm rounded-xl shadow-lg cursor-pointer transition-colors flex items-center justify-center gap-2 active:scale-[0.99]"
+          className="flex-1 py-3 px-4 bg-[#006837] hover:bg-[#00522c] active:bg-[#008744] text-white font-semibold text-sm rounded-xl shadow-lg cursor-pointer transition-colors flex items-center justify-center gap-2 active:scale-[0.99]"
         >
           {saveSuccess ? <Check className="w-4 h-4 text-white" /> : null}
           <span>Save Changes</span>
@@ -767,25 +829,25 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
 
       {/* Reset Password Modal */}
       {showPasswordModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-sm bg-[#1e2024] border border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col gap-4">
-            <div className="flex items-center gap-2 border-b border-neutral-700 pb-3">
-              <KeyRound className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-white font-bold text-base">Reset Password</h3>
+        <div className="fixed inset-0 bg-[#211F1F]/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-sm bg-[#211F1F] border border-neutral-700 rounded-3xl p-5 shadow-2xl flex flex-col gap-4">
+            <div className="flex items-center gap-2 border-b border-neutral-700/60 pb-3">
+              <KeyRound className="w-5 h-5 text-[#7BE4C2]" />
+              <h3 className="text-white font-bold text-base">Set Control Panel Password</h3>
             </div>
-            <p className="text-xs text-neutral-400">
-              Enter your new password for offline native device authentication.
+            <p className="text-xs text-neutral-300">
+              Enter your new password to secure the Control Panel.
             </p>
             <input
-              type="password"
+              type="text"
               placeholder="Enter new password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full bg-[#17181a] border border-neutral-700 rounded-xl px-3 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none"
+              className="w-full bg-[#2C3033] border border-neutral-700 rounded-xl px-3 py-2.5 text-sm text-white focus:border-[#7BE4C2] focus:outline-none font-mono"
             />
             {passwordSuccess && (
-              <span className="text-xs text-emerald-400 flex items-center gap-1">
-                <Check className="w-3.5 h-3.5" /> Password reset successfully!
+              <span className="text-xs text-[#7BE4C2] flex items-center gap-1">
+                <Check className="w-3.5 h-3.5" /> Password updated and saved!
               </span>
             )}
             <div className="flex gap-2 pt-2">
@@ -795,13 +857,14 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
                   setPasswordSuccess(false);
                   setNewPassword('');
                 }}
-                className="flex-1 py-2 bg-neutral-800 text-neutral-300 text-xs font-semibold rounded-xl"
+                className="flex-1 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={() => {
                   if (newPassword.trim()) {
+                    setStoredPassword(newPassword.trim());
                     setPasswordSuccess(true);
                     setTimeout(() => {
                       setShowPasswordModal(false);
@@ -810,9 +873,9 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
                     }, 1200);
                   }
                 }}
-                className="flex-1 py-2 bg-[#008744] hover:bg-[#007038] text-white text-xs font-semibold rounded-xl"
+                className="flex-1 py-2.5 bg-[#006837] hover:bg-[#00522c] text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
               >
-                Save
+                Save Password
               </button>
             </div>
           </div>

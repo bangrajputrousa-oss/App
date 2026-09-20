@@ -42,7 +42,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   return (
     <nav
       id="bottom-navigation-bar"
-      className="w-full h-16 bg-[#16171a] border-t border-[#25272b] flex items-center justify-around px-2 select-none z-30 shrink-0"
+      className="w-full h-16 bg-[#211F1F] border-t border-[#2D2B2B] flex items-center justify-around px-2 select-none z-30 shrink-0"
     >
       {tabs.map((tab) => {
         const Icon = tab.icon;
@@ -57,13 +57,13 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
             <Icon
               className={`w-5 h-5 mb-1 transition-transform ${
                 isActive
-                  ? 'text-[#22c55e] stroke-[2.4] scale-105'
+                  ? 'text-[#7BE4C2] stroke-[2.4] scale-105'
                   : 'text-[#8b919a] stroke-[1.8] hover:text-[#c4c8ce]'
               }`}
             />
             <span
               className={`text-[11px] leading-tight font-medium ${
-                isActive ? 'text-[#22c55e]' : 'text-[#8b919a]'
+                isActive ? 'text-[#7BE4C2]' : 'text-[#8b919a]'
               }`}
             >
               {tab.label}

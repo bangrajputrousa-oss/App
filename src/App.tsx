@@ -147,7 +147,7 @@ export default function App() {
     currentScreen === 'resident_id';
 
   return (
-    <div className="min-h-screen w-full bg-[#0a0b0d] flex items-center justify-center sm:p-4 text-white font-sans antialiased selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen w-full bg-[#211F1F] flex items-center justify-center sm:p-4 text-white font-sans antialiased selection:bg-[#7BE4C2] selection:text-black">
       {/* Hidden file input for importing device backup */}
       <input
         type="file"
@@ -160,7 +160,7 @@ export default function App() {
       {/* Main Android App Container */}
       <div
         id="android-device-frame"
-        className="relative w-full max-w-md h-screen sm:h-[844px] bg-[#121315] sm:rounded-[36px] overflow-hidden flex flex-col shadow-2xl border-0 sm:border sm:border-neutral-800"
+        className="relative w-full max-w-md h-screen sm:h-[844px] bg-[#211F1F] sm:rounded-[36px] overflow-hidden flex flex-col shadow-2xl border-0 sm:border sm:border-neutral-800"
         style={{
           boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05)',
         }}
@@ -249,7 +249,7 @@ export default function App() {
         )}
 
         {/* Android Navigation Pill Indicator at bottom of screen */}
-        <div className="w-full bg-[#16171a] py-1 flex items-center justify-center shrink-0">
+        <div className="w-full bg-[#211F1F] py-1 flex items-center justify-center shrink-0">
           <div className="w-32 h-1 bg-neutral-600 rounded-full" />
         </div>
       </div>
@@ -263,8 +263,8 @@ export default function App() {
 
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 z-50 left-1/2 -translate-x-1/2 bg-neutral-900/95 text-white border border-emerald-500/50 shadow-2xl rounded-2xl px-4 py-2.5 flex items-center gap-2 text-xs font-semibold backdrop-blur-md animate-in fade-in slide-in-from-bottom-3">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div className="fixed bottom-6 z-50 left-1/2 -translate-x-1/2 bg-[#211F1F]/95 text-white border border-[#7BE4C2]/50 shadow-2xl rounded-2xl px-4 py-2.5 flex items-center gap-2 text-xs font-semibold backdrop-blur-md animate-in fade-in slide-in-from-bottom-3">
+          <CheckCircle2 className="w-4 h-4 text-[#7BE4C2] shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
