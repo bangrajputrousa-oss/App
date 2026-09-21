@@ -76,6 +76,12 @@ export const INITIAL_STATE: AppState = {
     headerLogoScale: 1.5,
     homeDigitalIdImage: '',
   },
+  loginConfig: {
+    username: '2502740083',
+    password: 'Aa123456',
+    logoImage: '',
+    otpMobile: '*****5773',
+  },
 };
 
 const STORAGE_KEY = 'absher_native_offline_data_v1';
@@ -85,6 +91,18 @@ export function loadAppState(): AppState {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
+      const loadedLoginConfig = {
+        ...INITIAL_STATE.loginConfig,
+        ...(parsed.loginConfig || {}),
+      };
+      // If previous default credentials were present, migrate to the requested defaults
+      if (loadedLoginConfig.username === '2602801801') {
+        loadedLoginConfig.username = '2502740083';
+      }
+      if (loadedLoginConfig.password === 'Ayat007007') {
+        loadedLoginConfig.password = 'Aa123456';
+      }
+
       return {
         ...INITIAL_STATE,
         ...parsed,
@@ -96,6 +114,7 @@ export function loadAppState(): AppState {
           ...INITIAL_STATE.visuals,
           ...(parsed.visuals || {}),
         },
+        loginConfig: loadedLoginConfig,
         documents: parsed.documents && parsed.documents.length > 0 ? parsed.documents : INITIAL_STATE.documents,
       };
     }

@@ -21,10 +21,12 @@ import { WorkersScreen } from './components/WorkersScreen';
 import { OtherScreen } from './components/OtherScreen';
 import { ControlPanelScreen } from './components/ControlPanelScreen';
 import { ControlPanelLockModal } from './components/ControlPanelLockModal';
+import { AuthFlowManager } from './components/AuthFlowManager';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>(loadAppState);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('home');
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -136,18 +138,19 @@ export default function App() {
 
   // Determine if bottom navigation bar should be visible
   const showBottomNav =
-    currentScreen === 'home' ||
-    currentScreen === 'services' ||
-    currentScreen === 'family' ||
-    currentScreen === 'workers' ||
-    currentScreen === 'other' ||
-    currentScreen === 'profile' ||
-    currentScreen === 'personal_details' ||
-    currentScreen === 'passport' ||
-    currentScreen === 'resident_id';
+    isAuthenticated &&
+    (currentScreen === 'home' ||
+      currentScreen === 'services' ||
+      currentScreen === 'family' ||
+      currentScreen === 'workers' ||
+      currentScreen === 'other' ||
+      currentScreen === 'profile' ||
+      currentScreen === 'personal_details' ||
+      currentScreen === 'passport' ||
+      currentScreen === 'resident_id');
 
   return (
-    <div className="min-h-screen w-full bg-[#211F1F] flex items-center justify-center sm:p-4 text-white font-sans antialiased selection:bg-[#7BE4C2] selection:text-black">
+    <div className="min-h-[100dvh] h-[100dvh] w-full bg-[#211F1F] flex items-center justify-center sm:p-2 md:p-4 text-white font-sans antialiased selection:bg-[#7BE4C2] selection:text-black overflow-hidden">
       {/* Hidden file input for importing device backup */}
       <input
         type="file"
@@ -157,89 +160,109 @@ export default function App() {
         onChange={handleFileChange}
       />
 
-      {/* Main Android App Container */}
+      {/* Main Android App Container - Fluidly adjustable with display resolution */}
       <div
         id="android-device-frame"
-        className="relative w-full max-w-md h-screen sm:h-[844px] bg-[#211F1F] sm:rounded-[36px] overflow-hidden flex flex-col shadow-2xl border-0 sm:border sm:border-neutral-800"
+        className="relative w-full max-w-md h-[100dvh] sm:h-[min(880px,calc(100dvh-1.5rem))] bg-[#211F1F] sm:rounded-[36px] overflow-hidden flex flex-col shadow-2xl border-0 sm:border sm:border-neutral-800"
         style={{
           boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05)',
         }}
       >
         {/* Dynamic Screen Routing */}
         <main className="flex-1 flex flex-col overflow-hidden relative">
-          {currentScreen === 'home' && (
-            <HomeScreen appState={appState} onNavigate={handleNavigate} />
-          )}
-
-          {currentScreen === 'profile' && (
-            <ProfileScreen
+          {!isAuthenticated ? (
+            <AuthFlowManager
               appState={appState}
-              onNavigate={handleNavigate}
-              onBack={handleBack}
+              onAuthenticated={() => {
+                setIsAuthenticated(true);
+                showToast('Welcome to Absher');
+              }}
             />
-          )}
+          ) : (
+            <>
+              {currentScreen === 'home' && (
+                <HomeScreen appState={appState} onNavigate={handleNavigate} />
+              )}
 
-          {currentScreen === 'personal_details' && (
-            <PersonalDetailsScreen
-              appState={appState}
-              onBack={handleBack}
-            />
-          )}
+              {currentScreen === 'profile' && (
+                <ProfileScreen
+                  appState={appState}
+                  onNavigate={handleNavigate}
+                  onBack={handleBack}
+                />
+              )}
 
-          {currentScreen === 'passport' && (
-            <PassportScreen
-              appState={appState}
-              onBack={handleBack}
-            />
-          )}
+              {currentScreen === 'personal_details' && (
+                <PersonalDetailsScreen
+                  appState={appState}
+                  onBack={handleBack}
+                />
+              )}
 
-          {currentScreen === 'resident_id' && (
-            <ResidentIdScreen
-              appState={appState}
-              onBack={handleBack}
-            />
-          )}
+              {currentScreen === 'passport' && (
+                <PassportScreen
+                  appState={appState}
+                  onBack={handleBack}
+                />
+              )}
 
-          {currentScreen === 'license' && (
-            <LicenseScreen
-              appState={appState}
-              onBack={handleBack}
-            />
-          )}
+              {currentScreen === 'resident_id' && (
+                <ResidentIdScreen
+                  appState={appState}
+                  onBack={handleBack}
+                />
+              )}
 
-          {currentScreen === 'visa' && (
-            <VisaScreen
-              appState={appState}
-              onBack={handleBack}
-            />
-          )}
+              {currentScreen === 'license' && (
+                <LicenseScreen
+                  appState={appState}
+                  onBack={handleBack}
+                />
+              )}
 
-          {currentScreen === 'services' && (
-            <ServicesScreen onNavigate={handleNavigate} />
-          )}
+              {currentScreen === 'visa' && (
+                <VisaScreen
+                  appState={appState}
+                  onBack={handleBack}
+                />
+              )}
 
-          {currentScreen === 'family' && <FamilyScreen />}
+              {currentScreen === 'services' && (
+                <ServicesScreen onNavigate={handleNavigate} />
+              )}
 
-          {currentScreen === 'workers' && <WorkersScreen />}
+              {currentScreen === 'family' && <FamilyScreen />}
 
-          {currentScreen === 'other' && (
-            <OtherScreen
-              onNavigate={handleNavigate}
-              onExportBackup={handleExportBackup}
-              onImportBackup={handleTriggerImport}
-              onResetDefaults={handleResetDefaults}
-            />
-          )}
+              {currentScreen === 'workers' && <WorkersScreen />}
 
-          {currentScreen === 'control_panel' && (
-            <ControlPanelScreen
-              appState={appState}
-              onSave={handleSaveState}
-              onBack={handleBack}
-              onExportBackup={handleExportBackup}
-              onImportBackup={handleTriggerImport}
-              onResetDefaults={handleResetDefaults}
-            />
+              {currentScreen === 'other' && (
+                <OtherScreen
+                  onNavigate={handleNavigate}
+                  onExportBackup={handleExportBackup}
+                  onImportBackup={handleTriggerImport}
+                  onResetDefaults={handleResetDefaults}
+                  onLogout={() => {
+                    setIsAuthenticated(false);
+                    showToast('Logged out');
+                  }}
+                />
+              )}
+
+              {currentScreen === 'control_panel' && (
+                <ControlPanelScreen
+                  appState={appState}
+                  onSave={handleSaveState}
+                  onBack={handleBack}
+                  onExportBackup={handleExportBackup}
+                  onImportBackup={handleTriggerImport}
+                  onResetDefaults={handleResetDefaults}
+                  onLogout={() => {
+                    setIsAuthenticated(false);
+                    showToast('Locked to Login Screen');
+                  }}
+                />
+              )}
+            </>
           )}
         </main>
 

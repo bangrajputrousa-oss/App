@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Shield, Globe, Info, Bell, ChevronRight, Lock } from 'lucide-react';
+import { Settings, Shield, Globe, Info, Bell, ChevronRight, Lock, LogOut } from 'lucide-react';
 import { ScreenType } from '../types';
 
 interface OtherScreenProps {
@@ -7,10 +7,12 @@ interface OtherScreenProps {
   onExportBackup?: () => void;
   onImportBackup?: () => void;
   onResetDefaults?: () => void;
+  onLogout?: () => void;
 }
 
 export const OtherScreen: React.FC<OtherScreenProps> = ({
   onNavigate,
+  onLogout,
 }) => {
   return (
     <div id="screen-other" className="flex-1 flex flex-col overflow-y-auto bg-[#211F1F] text-white">
@@ -89,6 +91,20 @@ export const OtherScreen: React.FC<OtherScreenProps> = ({
               </div>
               <span className="text-xs text-neutral-400 font-mono">v4.39.0 (Offline)</span>
             </div>
+
+            {onLogout && (
+              <div
+                id="btn-app-logout"
+                onClick={onLogout}
+                className="p-4 flex items-center justify-between cursor-pointer hover:bg-red-950/40 transition-colors text-red-300"
+              >
+                <div className="flex items-center gap-3.5">
+                  <LogOut className="w-5 h-5 text-red-400" />
+                  <span className="text-sm font-medium">Log Out / تسجيل الخروج</span>
+                </div>
+                <span className="text-xs text-red-400 font-semibold">Exit</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

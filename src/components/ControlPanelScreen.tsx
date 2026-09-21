@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeft, Upload, Trash2, Plus, Check, KeyRound, Download, FolderOpen, RotateCcw, Lock } from 'lucide-react';
-import { AppState, DocumentItem } from '../types';
+import { ArrowLeft, Upload, Trash2, Plus, Check, KeyRound, Download, FolderOpen, RotateCcw, Lock, LogOut, ShieldCheck } from 'lucide-react';
+import { AppState, DocumentItem, LoginConfig } from '../types';
 import { setStoredPassword, getStoredPassword } from './ControlPanelLockModal';
+import { AbsherDualEmblem } from './AbsherBrandIcons';
 
 interface ControlPanelScreenProps {
   appState: AppState;
@@ -10,6 +11,7 @@ interface ControlPanelScreenProps {
   onExportBackup: () => void;
   onImportBackup: () => void;
   onResetDefaults: () => void;
+  onLogout?: () => void;
 }
 
 export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
@@ -19,8 +21,20 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
   onExportBackup,
   onImportBackup,
   onResetDefaults,
+  onLogout,
 }) => {
-  const [formData, setFormData] = useState<AppState>(JSON.parse(JSON.stringify(appState)));
+  const [formData, setFormData] = useState<AppState>(() => {
+    const cloned = JSON.parse(JSON.stringify(appState));
+    if (!cloned.loginConfig) {
+      cloned.loginConfig = {
+        username: cloned.personalDetails?.idNumber || '2502740083',
+        password: 'Aa123456',
+        logoImage: cloned.visuals?.loginScreenImage || '',
+        otpMobile: '*****5773',
+      };
+    }
+    return cloned;
+  });
   const [newDocTitle, setNewDocTitle] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -29,6 +43,7 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
 
   // Hidden file input refs
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const loginLogoInputRef = useRef<HTMLInputElement>(null);
   const homeDigitalIdInputRef = useRef<HTMLInputElement>(null);
   const bgInputRef = useRef<HTMLInputElement>(null);
   const loginInputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +55,20 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
       ...prev,
       personalDetails: {
         ...prev.personalDetails,
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleLoginConfigChange = (field: keyof LoginConfig, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      loginConfig: {
+        username: prev.loginConfig?.username || prev.personalDetails.idNumber || '2502740083',
+        password: prev.loginConfig?.password || 'Aa123456',
+        logoImage: prev.loginConfig?.logoImage || '',
+        otpMobile: prev.loginConfig?.otpMobile || '*****5773',
+        ...prev.loginConfig,
         [field]: value,
       },
     }));
@@ -382,44 +411,175 @@ export const ControlPanelScreen: React.FC<ControlPanelScreenProps> = ({
           </div>
         </div>
 
-        {/* Card: Login Screen Image */}
-        <div className="w-full bg-[#1e2024] rounded-2xl p-4 border border-neutral-800/80 flex flex-col gap-3">
-          <span className="text-sm font-semibold text-neutral-200">
-            Login Screen Image
-          </span>
-          <div className="flex items-center gap-3.5">
-            <div className="w-18 h-18 rounded-xl bg-[#00e600] flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
-              {formData.visuals.loginScreenImage ? (
-                <img
-                  src={formData.visuals.loginScreenImage}
-                  alt="Login screen preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-xs font-bold text-black tracking-wide">Image</span>
-              )}
+        {/* Card: Login Screen & Access Credentials (Requested Sequence & Settings) */}
+        <div className="w-full bg-[#1e2024] rounded-2xl p-4 border border-[#7BE4C2]/30 flex flex-col gap-4 shadow-lg">
+          <div className="flex items-center justify-between border-b border-neutral-800 pb-2.5">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-[#7BE4C2]" />
+              <span className="text-sm font-bold text-white tracking-wide">
+                App Login Screen & Credentials
+              </span>
             </div>
+            {onLogout && (
+              <button
+                type="button"
+                onClick={() => {
+                  handleSaveChanges();
+                  onLogout();
+                }}
+                className="px-2.5 py-1 bg-red-950/60 hover:bg-red-900/70 border border-red-800/60 text-red-200 text-[11px] font-semibold rounded-lg flex items-center gap-1.5 cursor-pointer transition-colors shadow-xs"
+                title="Lock app and test the login sequence"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Test Login Screen</span>
+              </button>
+            )}
+          </div>
+
+          {/* 1. Login Logo (White Marked Area in Screenshot) */}
+          <div className="flex flex-col gap-2 bg-[#141517] p-3 rounded-xl border border-neutral-700/60">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-neutral-300 font-semibold">
+                Login Logo (Marked White Area):
+              </span>
+              <span className="text-[10px] text-neutral-400">
+                Shown at top of Login Screen
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-20 h-16 rounded-xl bg-[#211F1F] border border-neutral-700 flex items-center justify-center overflow-hidden shrink-0 p-1">
+                {formData.loginConfig?.logoImage || formData.visuals.loginScreenImage ? (
+                  <img
+                    src={formData.loginConfig?.logoImage || formData.visuals.loginScreenImage}
+                    alt="Login logo preview"
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : (
+                  <div className="scale-75 flex items-center justify-center">
+                    <AbsherDualEmblem className="h-10" />
+                  </div>
+                )}
+              </div>
+
+              <input
+                type="file"
+                ref={loginLogoInputRef}
+                accept="image/*"
+                className="hidden"
+                onChange={(e) =>
+                  handleImageUpload(e, (base64) => {
+                    handleLoginConfigChange('logoImage', base64);
+                    setFormData((prev) => ({
+                      ...prev,
+                      visuals: { ...prev.visuals, loginScreenImage: base64 },
+                      loginConfig: {
+                        username: prev.loginConfig?.username || prev.personalDetails.idNumber || '2602801801',
+                        password: prev.loginConfig?.password || 'Ayat007007',
+                        otpMobile: prev.loginConfig?.otpMobile || '*****5773',
+                        ...prev.loginConfig,
+                        logoImage: base64,
+                      },
+                    }));
+                  })
+                }
+              />
+
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => loginLogoInputRef.current?.click()}
+                  className="px-3 py-2 bg-[#25282c] hover:bg-[#2e3238] text-neutral-200 text-xs font-semibold rounded-xl flex items-center gap-1.5 border border-neutral-700/60 cursor-pointer shadow-sm active:scale-95 transition-all"
+                >
+                  <Upload className="w-3.5 h-3.5 text-[#7BE4C2]" />
+                  <span>Upload Logo</span>
+                </button>
+                {(formData.loginConfig?.logoImage || formData.visuals.loginScreenImage) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleLoginConfigChange('logoImage', '');
+                      setFormData((prev) => ({
+                        ...prev,
+                        visuals: { ...prev.visuals, loginScreenImage: '' },
+                        loginConfig: {
+                          username: prev.loginConfig?.username || prev.personalDetails.idNumber || '2502740083',
+                          password: prev.loginConfig?.password || 'Aa123456',
+                          otpMobile: prev.loginConfig?.otpMobile || '*****5773',
+                          ...prev.loginConfig,
+                          logoImage: '',
+                        },
+                      }));
+                    }}
+                    className="px-2.5 py-2 bg-red-950/40 hover:bg-red-900/50 text-red-300 text-xs font-semibold rounded-xl border border-red-800/50 cursor-pointer transition-all"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Credentials: Username / ID & Password */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Username or ID Number */}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-neutral-300 font-medium">
+                Username or ID Number:
+              </label>
+              <input
+                id="cp-input-login-username"
+                type="text"
+                value={formData.loginConfig?.username ?? formData.personalDetails.idNumber ?? '2502740083'}
+                onChange={(e) => handleLoginConfigChange('username', e.target.value)}
+                placeholder="e.g. 2502740083"
+                className="w-full bg-[#141517] border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-[#7BE4C2]/60 font-mono tracking-wide"
+              />
+              <span className="text-[10px] text-neutral-400">
+                User must type this ID Number to pass login.
+              </span>
+            </div>
+
+            {/* Password */}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-neutral-300 font-medium">
+                Login Password:
+              </label>
+              <input
+                id="cp-input-login-password"
+                type="text"
+                value={formData.loginConfig?.password ?? 'Aa123456'}
+                onChange={(e) => handleLoginConfigChange('password', e.target.value)}
+                placeholder="e.g. Aa123456"
+                className="w-full bg-[#141517] border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-[#7BE4C2]/60 font-mono tracking-wide"
+              />
+              <span className="text-[10px] text-neutral-400">
+                User must type this password to pass login.
+              </span>
+            </div>
+          </div>
+
+          {/* 3. OTP Mobile Display */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-neutral-300 font-medium">
+              OTP Screen SMS Mobile Number:
+            </label>
             <input
-              type="file"
-              ref={loginInputRef}
-              accept="image/*"
-              className="hidden"
-              onChange={(e) =>
-                handleImageUpload(e, (base64) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    visuals: { ...prev.visuals, loginScreenImage: base64 },
-                  }))
-                )
-              }
+              id="cp-input-login-otp-mobile"
+              type="text"
+              value={formData.loginConfig?.otpMobile ?? '*****5773'}
+              onChange={(e) => handleLoginConfigChange('otpMobile', e.target.value)}
+              placeholder="e.g. *****5773"
+              className="w-full bg-[#141517] border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-[#7BE4C2]/60 font-mono tracking-wide"
             />
-            <button
-              onClick={() => loginInputRef.current?.click()}
-              className="px-4 py-2.5 bg-[#25282c] hover:bg-[#2e3238] text-neutral-200 text-xs font-semibold rounded-xl flex items-center gap-2 border border-neutral-700/60 cursor-pointer shadow-sm active:scale-95 transition-all"
-            >
-              <Upload className="w-4 h-4" />
-              <span>Upload Image</span>
-            </button>
+            <span className="text-[10px] text-neutral-400">
+              Shown in "Please enter the code received on your mobile via SMS".
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-xl bg-neutral-900/80 border border-neutral-800 text-[11px] text-neutral-400 leading-relaxed">
+            <span className="text-[#7BE4C2] font-semibold">Login Sequence: </span>
+            Credentials check → Loading screen (0.15s) → OTP screen (0.3s) → Loading screen (0.1s) → Main App.
           </div>
         </div>
 

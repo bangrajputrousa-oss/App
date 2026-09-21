@@ -39,10 +39,18 @@ export interface VisualSettings {
   homeDigitalIdImage?: string; // Dedicated directly uploaded Home Page Digital ID card
 }
 
+export interface LoginConfig {
+  username: string; // Required ID Number or Username
+  password: string; // Required Password
+  logoImage?: string; // Logo uploaded in Control Panel (white marked area)
+  otpMobile?: string; // Masked mobile displayed on OTP screen (e.g. '*****5773')
+}
+
 export interface AppState {
   personalDetails: UserPersonalDetails;
   documents: DocumentItem[];
   visuals: VisualSettings;
+  loginConfig?: LoginConfig;
 }
 
 export type ScreenType =
