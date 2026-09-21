@@ -42,7 +42,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   return (
     <nav
       id="bottom-navigation-bar"
-      className="w-full h-16 bg-[#211F1F] border-t border-[#2D2B2B] flex items-center justify-around px-2 select-none z-30 shrink-0"
+      className="w-full h-16 bg-[#1F2224] border-t border-[#2B2E32] flex items-center justify-around px-2 select-none z-30 shrink-0"
     >
       {tabs.map((tab) => {
         const Icon = tab.icon;

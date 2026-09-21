@@ -26,7 +26,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       <img
         src={src}
         alt={name}
-        className={`object-cover rounded-md border border-neutral-700/50 shadow-sm ${sizeClasses[size]} ${className}`}
+        className={`object-cover shadow-sm ${sizeClasses[size]} ${className}`}
       />
     );
   }
@@ -34,7 +34,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   // Authentic representation matching the screenshot thumbnail
   return (
     <div
-      className={`relative overflow-hidden rounded-md bg-gradient-to-b from-[#3a352d] via-[#242220] to-[#141517] border border-amber-900/30 flex items-center justify-center shrink-0 ${sizeClasses[size]} ${className}`}
+      className={`relative overflow-hidden bg-gradient-to-b from-[#3a352d] via-[#242220] to-[#141517] flex items-center justify-center shrink-0 ${sizeClasses[size]} ${className}`}
       title={name}
     >
       <svg
@@ -62,7 +62,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         {/* Head */}
         <ellipse cx="50" cy="48" rx="20" ry="24" fill="#a5714e" />
         
-        {/* Receding Hair */}
+        {/* Hair */}
         <path
           d="M30 46 C 30 28, 38 24, 50 24 C 62 24, 70 28, 70 46 C 68 35, 62 30, 50 30 C 38 30, 32 35, 30 46 Z"
           fill="#1b1715"

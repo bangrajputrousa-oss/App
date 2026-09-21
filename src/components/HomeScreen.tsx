@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Search, Settings, Bell, Car, Fingerprint, MapPin, Sparkles, MessageSquare, ChevronRight, X, AlertCircle, Lock, ZoomIn, ZoomOut, RotateCw } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Settings, Bell, CarFront, Fingerprint, MapPinned, FileText, User, Sparkles, MessageSquareMore, ChevronRight, X, AlertCircle, CheckCircle2, ShieldCheck, Lock } from 'lucide-react';
 import { AppState, ScreenType } from '../types';
 import { UserAvatar } from './UserAvatar';
 import { DigitalIdCard } from './DigitalIdCard';
@@ -19,42 +19,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [showNotifications, setShowNotifications] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
   const [showCardPreview, setShowCardPreview] = useState(false);
-  const [isRotatedLandscape, setIsRotatedLandscape] = useState(true);
-  const [isZoomed2x, setIsZoomed2x] = useState(true);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStartRef = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+  const [activeModal, setActiveModal] = useState<'vehicles' | 'auth' | 'travel' | 'accident' | 'photo' | 'weapons' | null>(null);
 
   const handleOpenCardPreview = () => {
-    setIsRotatedLandscape(true);
-    setIsZoomed2x(true);
-    setPan({ x: 0, y: 0 });
     setShowCardPreview(true);
-  };
-
-  const handlePointerDown = (e: React.PointerEvent) => {
-    e.stopPropagation();
-    setIsDragging(true);
-    dragStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      panX: pan.x,
-      panY: pan.y,
-    };
-  };
-
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging) return;
-    const dx = e.clientX - dragStartRef.current.x;
-    const dy = e.clientY - dragStartRef.current.y;
-    setPan({
-      x: dragStartRef.current.panX + dx,
-      y: dragStartRef.current.panY + dy,
-    });
-  };
-
-  const handlePointerUp = () => {
-    setIsDragging(false);
   };
 
   // Dedicated Home Page Digital ID card image (uploaded directly from Control Panel or resident ID doc)
@@ -205,86 +173,135 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </section>
 
-        {/* Section: Quick Access */}
-        <section id="section-quick-access" className="bg-[#006837] -mx-4.5 px-4.5 pt-5 pb-9 flex flex-col gap-3.5 shadow-md">
+        {/* Section: Quick Access matching uploaded screenshot */}
+        <section id="section-quick-access" className="bg-[#006837] -mx-4.5 px-4.5 pt-5 pb-10 flex flex-col gap-3.5 shadow-md">
           <div className="w-full">
             <h3 className="text-white font-bold text-lg tracking-tight font-sans">
               Quick Access
             </h3>
           </div>
 
-          {/* Card: My Vehicles */}
+          {/* Card 1: My Vehicles */}
           <div
             id="card-my-vehicles"
-            onClick={() => onNavigate('license')}
-            className="w-full bg-[#2C3033] hover:bg-[#34393D] border border-neutral-700/50 rounded-2xl p-5 min-h-[108px] flex items-center gap-4.5 cursor-pointer shadow-md transition-all active:scale-[0.99]"
+            onClick={() => setActiveModal('vehicles')}
+            className="w-full bg-[#2A2D30] hover:bg-[#32363A] border border-white/5 rounded-2xl p-4.5 min-h-[92px] flex items-center gap-4 cursor-pointer shadow-md transition-all active:scale-[0.99]"
           >
-            <div className="w-14 h-14 rounded-2xl bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center shrink-0 text-[#7BE4C2]">
-              <Car className="w-7 h-7" />
-            </div>
+            <CarFront className="w-9 h-9 text-[#7BE4C2] stroke-[1.8] shrink-0" />
             <div className="flex-1">
-              <h4 className="text-white font-bold text-base leading-snug">
+              <h4 className="text-white font-medium text-sm leading-snug">
                 My Vehicles
               </h4>
-              <p className="text-neutral-300 text-xs leading-relaxed mt-1">
+              <p className="text-[#A6ABB0] text-xs leading-relaxed mt-0.5">
                 View details, renew documents, report accidents, and much more.
               </p>
             </div>
           </div>
 
-          {/* Grid row: Authentication & Absher Travel */}
+          {/* Grid Row 1: Authentication Services & Absher Travel */}
           <div className="w-full grid grid-cols-2 gap-3.5">
-            {/* Authentication */}
+            {/* Authentication Services */}
             <div
               id="card-authentication"
-              onClick={() => onNavigate('services')}
-              className="bg-[#2C3033] hover:bg-[#34393D] border border-neutral-700/50 rounded-2xl p-5 min-h-[145px] flex flex-col justify-between cursor-pointer shadow-md transition-all active:scale-[0.98]"
+              onClick={() => setActiveModal('auth')}
+              className="bg-[#2A2D30] hover:bg-[#32363A] border border-white/5 rounded-2xl p-4.5 min-h-[135px] flex flex-col justify-between cursor-pointer shadow-md transition-all active:scale-[0.98]"
             >
-              <div className="w-12 h-12 rounded-2xl bg-neutral-800/90 flex items-center justify-center text-[#7BE4C2]">
-                <Fingerprint className="w-7 h-7" />
-              </div>
+              <Fingerprint className="w-10 h-10 text-[#7BE4C2] stroke-[1.8]" />
               <div>
-                <h4 className="text-white font-bold text-sm leading-tight">
-                  Authentication
+                <h4 className="text-white font-medium text-sm leading-snug">
+                  Authentication Services
                 </h4>
-                <p className="text-neutral-300 text-xs mt-1">
-                  Biometric Login
-                </p>
               </div>
             </div>
 
             {/* Absher Travel */}
             <div
               id="card-absher-travel"
-              onClick={() => onNavigate('services')}
-              className="bg-[#2C3033] hover:bg-[#34393D] border border-neutral-700/50 rounded-2xl p-5 min-h-[145px] flex flex-col justify-between cursor-pointer shadow-md transition-all active:scale-[0.98]"
+              onClick={() => setActiveModal('travel')}
+              className="bg-[#2A2D30] hover:bg-[#32363A] border border-white/5 rounded-2xl p-4.5 min-h-[135px] flex flex-col justify-between cursor-pointer shadow-md transition-all active:scale-[0.98]"
             >
-              <div className="w-12 h-12 rounded-2xl bg-neutral-800/90 flex items-center justify-center text-[#7BE4C2]">
-                <MapPin className="w-7 h-7" />
-              </div>
+              <MapPinned className="w-10 h-10 text-[#7BE4C2] stroke-[1.8]" />
               <div>
-                <h4 className="text-white font-bold text-sm leading-tight">
+                <h4 className="text-white font-medium text-sm leading-snug">
                   Absher Travel
                 </h4>
-                <p className="text-neutral-300 text-xs mt-1">
-                  Trip permits & info
-                </p>
               </div>
+            </div>
+          </div>
+
+          {/* Grid Row 2: Report Minor Accident & Update Resident Photo */}
+          <div className="w-full grid grid-cols-2 gap-3.5">
+            {/* Report Minor Accident */}
+            <div
+              id="card-report-accident"
+              onClick={() => setActiveModal('accident')}
+              className="bg-[#2A2D30] hover:bg-[#32363A] border border-white/5 rounded-2xl p-4.5 min-h-[135px] flex flex-col justify-between cursor-pointer shadow-md transition-all active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-1.5">
+                <CarFront className="w-8 h-8 text-[#7BE4C2] stroke-[1.8]" />
+                <FileText className="w-6 h-6 text-[#7BE4C2] stroke-[1.8]" />
+              </div>
+              <div>
+                <h4 className="text-white font-medium text-sm leading-snug">
+                  Report Minor Accident
+                </h4>
+              </div>
+            </div>
+
+            {/* Update Resident Photo */}
+            <div
+              id="card-update-photo"
+              onClick={() => setActiveModal('photo')}
+              className="bg-[#2A2D30] hover:bg-[#32363A] border border-white/5 rounded-2xl p-4.5 min-h-[135px] flex flex-col justify-between cursor-pointer shadow-md transition-all active:scale-[0.98]"
+            >
+              <div className="relative w-9 h-9">
+                <div className="absolute -top-1 -left-1 w-7.5 h-7.5 rounded-md border-[2px] border-[#7BE4C2] opacity-40 -rotate-3" />
+                <div className="relative w-7.5 h-7.5 rounded-md border-[2px] border-[#7BE4C2] bg-[#2A2D30] flex items-center justify-center">
+                  <User className="w-4.5 h-4.5 text-[#7BE4C2] stroke-[2]" />
+                </div>
+              </div>
+              <div>
+                <h4 className="text-white font-medium text-sm leading-snug">
+                  Update Resident Photo
+                </h4>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 6: My Weapons */}
+          <div
+            id="card-my-weapons"
+            onClick={() => setActiveModal('weapons')}
+            className="w-full bg-[#2A2D30] hover:bg-[#32363A] border border-white/5 rounded-2xl p-4.5 min-h-[92px] flex items-center gap-4 cursor-pointer shadow-md transition-all active:scale-[0.99]"
+          >
+            {/* Clean stylized pistol outline matching screenshot */}
+            <svg viewBox="0 0 32 20" className="w-10 h-7 text-[#7BE4C2] stroke-[1.8] fill-none shrink-0" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M 28 5 L 8 5 C 7 5 6 6 6 7 L 6 10 L 15 10 L 15 12 C 15 13 14 14 13 14 L 10 14" />
+              <path d="M 15 10 L 19 10 L 23 18 C 23.5 19 25 19 26 18 L 29 13 C 29.5 12 29.5 10 29 8 L 28 5 Z" />
+              <path d="M 16 11 C 17 12 17 13 16 14" />
+            </svg>
+            <div className="flex-1">
+              <h4 className="text-white font-medium text-sm leading-snug">
+                My Weapons
+              </h4>
+              <p className="text-[#A6ABB0] text-xs leading-relaxed mt-0.5">
+                View weapons details, issue and view carry permits
+              </p>
             </div>
           </div>
         </section>
       </div>
 
-      {/* Floating Action Button (Mint Chat & AI Assistant) */}
+      {/* Floating Action Button (Mint Chat & Assistant matching screenshot) */}
       <button
         id="fab-assistant"
         onClick={() => setShowChatbot(!showChatbot)}
-        className="fixed bottom-20 right-5 w-13 h-13 rounded-full bg-[#7BE4C2] hover:bg-[#68dcb7] text-[#064e3b] shadow-xl flex items-center justify-center cursor-pointer transition-transform hover:scale-105 active:scale-95 z-20"
+        className="fixed bottom-20 right-4 w-14 h-14 rounded-full bg-[#98E2C6] hover:bg-[#85dab8] text-[#042d17] shadow-2xl flex items-center justify-center cursor-pointer transition-transform hover:scale-105 active:scale-95 z-30"
         title="Absher Smart Assistant"
       >
         <div className="relative">
-          <MessageSquare className="w-6 h-6 fill-current stroke-[2]" />
-          <Sparkles className="w-3.5 h-3.5 absolute -top-1 -right-1.5 text-emerald-800" />
+          <MessageSquareMore className="w-7 h-7 stroke-[2.2]" />
+          <Sparkles className="w-3.5 h-3.5 absolute -top-1 -right-1 text-[#042d17]" />
         </div>
       </button>
 
@@ -368,6 +385,189 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
       )}
 
+      {/* Quick Access Item Modal */}
+      {activeModal && (
+        <div
+          className="fixed inset-0 bg-[#211F1F]/85 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn"
+          onClick={() => setActiveModal(null)}
+        >
+          <div
+            className="w-full max-w-sm bg-[#2C3033] border border-neutral-700 rounded-3xl p-5 shadow-2xl flex flex-col gap-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-neutral-700/80 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-emerald-950/80 border border-emerald-500/30 flex items-center justify-center text-[#7BE4C2]">
+                  {activeModal === 'vehicles' && <CarFront className="w-5 h-5" />}
+                  {activeModal === 'auth' && <Fingerprint className="w-5 h-5" />}
+                  {activeModal === 'travel' && <MapPinned className="w-5 h-5" />}
+                  {activeModal === 'accident' && <CarFront className="w-5 h-5" />}
+                  {activeModal === 'photo' && <User className="w-5 h-5" />}
+                  {activeModal === 'weapons' && <ShieldCheck className="w-5 h-5" />}
+                </div>
+                <h3 className="text-white font-bold text-base">
+                  {activeModal === 'vehicles' && 'My Vehicles'}
+                  {activeModal === 'auth' && 'Authentication Services'}
+                  {activeModal === 'travel' && 'Absher Travel'}
+                  {activeModal === 'accident' && 'Report Minor Accident'}
+                  {activeModal === 'photo' && 'Update Resident Photo'}
+                  {activeModal === 'weapons' && 'My Weapons & Permits'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="w-7 h-7 rounded-full bg-neutral-800 hover:bg-neutral-700 flex items-center justify-center text-neutral-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            {activeModal === 'vehicles' && (
+              <div className="flex flex-col gap-3 text-xs">
+                <div className="p-3 bg-[#212426] rounded-2xl border border-neutral-700/60 flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-neutral-400">Registered Vehicles</span>
+                    <span className="text-[#7BE4C2] font-semibold bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/20">1 Active</span>
+                  </div>
+                  <div className="text-white font-bold text-sm">Toyota Camry (Sedan)</div>
+                  <div className="grid grid-cols-2 gap-2 text-[11px] text-neutral-300 pt-1 border-t border-neutral-700/40">
+                    <div>Plate: <strong className="text-white font-mono">4821 KSA</strong></div>
+                    <div>Status: <span className="text-emerald-400">Valid (Istimara)</span></div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setActiveModal(null);
+                    onNavigate('license');
+                  }}
+                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
+                >
+                  View Driving License
+                </button>
+              </div>
+            )}
+
+            {activeModal === 'auth' && (
+              <div className="flex flex-col gap-3 text-xs">
+                <div className="p-3 bg-[#212426] rounded-2xl border border-neutral-700/60 flex flex-col gap-2.5">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span className="font-semibold">Biometric Authentication Active</span>
+                  </div>
+                  <p className="text-neutral-300 leading-relaxed text-[11px]">
+                    Your fingerprint and face identification are securely enrolled with Absher and Nafath for fast, password-free authorization.
+                  </p>
+                  <div className="text-neutral-400 text-[10px] pt-1 border-t border-neutral-700/40">
+                    Nafath Device Token: <span className="font-mono text-neutral-300">ACTIVE-ENCRYPTED-256</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveModal(null)}
+                  className="w-full py-2.5 bg-neutral-800 hover:bg-neutral-700 text-white font-semibold rounded-xl"
+                >
+                  Done
+                </button>
+              </div>
+            )}
+
+            {activeModal === 'travel' && (
+              <div className="flex flex-col gap-3 text-xs">
+                <div className="p-3 bg-[#212426] rounded-2xl border border-neutral-700/60 flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-neutral-400">Travel Status</span>
+                    <span className="bg-[#7BE4C2]/20 text-[#7BE4C2] border border-[#7BE4C2]/30 px-2 py-0.5 rounded-full text-[10px] font-semibold">
+                      Inside Kingdom
+                    </span>
+                  </div>
+                  <div className="text-white font-bold text-sm">Valid Travel Records</div>
+                  <p className="text-neutral-300 text-[11px] leading-relaxed">
+                    Exit & re-entry visas, international driving authorization, and travel records are verified with Border Guard and Jawazat.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setActiveModal(null);
+                    onNavigate('profile');
+                  }}
+                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
+                >
+                  View Travel History
+                </button>
+              </div>
+            )}
+
+            {activeModal === 'accident' && (
+              <div className="flex flex-col gap-3 text-xs">
+                <div className="p-3 bg-[#212426] rounded-2xl border border-neutral-700/60 flex flex-col gap-2">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span className="font-semibold">Najm Quick Accident Reporting</span>
+                  </div>
+                  <p className="text-neutral-300 text-[11px] leading-relaxed">
+                    Report minor, non-injury traffic accidents directly without waiting for a patrol car. Automatic GPS location and digital claim creation.
+                  </p>
+                  <div className="p-2 bg-emerald-950/40 border border-emerald-700/30 rounded-lg text-[11px] text-emerald-300">
+                    Insurance policy active with comprehensive vehicle coverage.
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveModal(null)}
+                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            )}
+
+            {activeModal === 'photo' && (
+              <div className="flex flex-col gap-3 text-xs">
+                <div className="p-3 bg-[#212426] rounded-2xl border border-neutral-700/60 flex flex-col gap-2">
+                  <div className="text-white font-bold text-sm">Jawazat & Civil Affairs Photo Standards</div>
+                  <ul className="text-neutral-300 text-[11px] list-disc list-inside space-y-1">
+                    <li>Recent photo taken within last 6 months</li>
+                    <li>Pure white background with even lighting</li>
+                    <li>No dark glasses, colored contact lenses, or head covering altering facial features</li>
+                  </ul>
+                </div>
+                <button
+                  onClick={() => {
+                    setActiveModal(null);
+                    onNavigate('control_panel');
+                  }}
+                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
+                >
+                  Upload New Photo in Control Panel
+                </button>
+              </div>
+            )}
+
+            {activeModal === 'weapons' && (
+              <div className="flex flex-col gap-3 text-xs">
+                <div className="p-3 bg-[#212426] rounded-2xl border border-neutral-700/60 flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-neutral-400">Weapons Registry</span>
+                    <span className="text-neutral-400 font-medium">MOI Registry</span>
+                  </div>
+                  <div className="p-3 bg-neutral-900/60 border border-neutral-800 rounded-xl text-center text-neutral-300 text-[11px]">
+                    No civilian weapons or carry permits are registered under ID <strong className="text-white font-mono">{personalDetails.idNumber}</strong>.
+                  </div>
+                  <p className="text-[10px] text-neutral-400 leading-relaxed">
+                    Firearms licensing, renewal, and transfer of ownership are subject to Ministry of Interior regulations and permits.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveModal(null)}
+                  className="w-full py-2.5 bg-neutral-800 hover:bg-neutral-700 text-white font-semibold rounded-xl"
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Full-Screen Landscape Digital ID Inspection Modal */}
       {showCardPreview && (
         <div
@@ -375,7 +575,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="fixed inset-0 z-50 bg-[#211F1F] flex flex-col items-center justify-between p-3 sm:p-6 overflow-hidden select-none animate-in fade-in duration-200"
           onClick={() => setShowCardPreview(false)}
         >
-          {/* Top Bar with Clean White 'X' Close Button & Clean Action Controls (Zero text writing!) */}
+          {/* Top Bar with Clean White 'X' Close Button (Zoom and Rotate icons hidden as requested) */}
           <div className="w-full flex items-center justify-between px-2 pt-1 z-20 shrink-0">
             <button
               id="btn-close-fullscreen-doc"
@@ -385,97 +585,35 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             >
               <X className="w-7 h-7 stroke-[2.5]" />
             </button>
-
-            {/* Action Buttons: 2X Zoom Toggle & Clean Orientation Rotate (Zero "Horizontal Mode" text!) */}
-            <div className="flex items-center gap-2">
-              <button
-                id="btn-toggle-zoom"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsZoomed2x(!isZoomed2x);
-                  setPan({ x: 0, y: 0 });
-                }}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold cursor-pointer transition-colors"
-                title={isZoomed2x ? 'Zoom Out to 1X' : 'Zoom In 2X'}
-              >
-                {isZoomed2x ? (
-                  <>
-                    <ZoomOut className="w-4 h-4 text-[#7BE4C2]" />
-                    <span className="font-mono text-xs text-[#7BE4C2]">2X</span>
-                  </>
-                ) : (
-                  <>
-                    <ZoomIn className="w-4 h-4 text-white" />
-                    <span className="font-mono text-xs text-white">1X</span>
-                  </>
-                )}
-              </button>
-
-              <button
-                id="btn-toggle-rotate"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsRotatedLandscape(!isRotatedLandscape);
-                  setPan({ x: 0, y: 0 });
-                }}
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white cursor-pointer transition-colors"
-                title="Rotate Orientation"
-              >
-                <RotateCw className="w-4.5 h-4.5 text-white" />
-              </button>
-            </div>
           </div>
 
-          {/* Center Stage: Document in Horizontal Mode with 2X Zoom & Smooth Pan */}
+          {/* Center Stage: Document in Horizontal Mode at 1X */}
           <div
-            className="flex-1 w-full flex items-center justify-center p-2 overflow-hidden select-none cursor-grab active:cursor-grabbing"
+            className="flex-1 w-full flex items-center justify-center p-2 overflow-hidden select-none"
             onClick={(e) => e.stopPropagation()}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
           >
-            <div
-              className="transition-transform duration-75 origin-center will-change-transform"
-              style={{
-                transform: `translate3d(${pan.x}px, ${pan.y}px, 0px)`,
-                touchAction: 'none',
-              }}
-            >
-              <div
-                className={`transition-all duration-300 origin-center flex items-center justify-center ${
-                  isRotatedLandscape
-                    ? 'rotate-90 sm:rotate-0 w-[78vh] sm:w-[94%] max-w-[620px] aspect-[1.586/1]'
-                    : 'w-full max-w-[620px] aspect-[1.586/1]'
-                } ${isZoomed2x ? 'scale-[2.0]' : 'scale-100'}`}
-                onDoubleClick={(e) => {
-                  e.stopPropagation();
-                  setIsZoomed2x(!isZoomed2x);
-                  setPan({ x: 0, y: 0 });
-                }}
-              >
-                {homeDigitalIdImage ? (
-                  <img
-                    src={homeDigitalIdImage}
-                    alt="Digital Document"
-                    draggable={false}
-                    className="w-full h-auto max-h-[85vh] object-contain rounded-2xl shadow-2xl border border-white/10 pointer-events-none select-none"
+            <div className="transition-all duration-300 origin-center flex items-center justify-center rotate-90 sm:rotate-0 w-[78vh] sm:w-[94%] max-w-[620px] aspect-[1.586/1] scale-100 shadow-2xl">
+              {homeDigitalIdImage ? (
+                <img
+                  src={homeDigitalIdImage}
+                  alt="Digital Document"
+                  draggable={false}
+                  className="w-full h-auto max-h-[85vh] object-contain rounded-2xl shadow-2xl border border-white/10 pointer-events-none select-none"
+                />
+              ) : (
+                <div className="w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 pointer-events-none select-none">
+                  <DigitalIdCard
+                    personalDetails={personalDetails}
+                    avatarUrl={visuals.profilePhoto}
                   />
-                ) : (
-                  <div className="w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 pointer-events-none select-none">
-                    <DigitalIdCard
-                      personalDetails={personalDetails}
-                      avatarUrl={visuals.profilePhoto}
-                    />
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Bottom helper text */}
           <div className="py-2 text-center text-xs text-neutral-400 z-10 shrink-0">
-            <span>{isZoomed2x ? '2X Zoom • Drag to pan • Double-tap or tap ✕ to exit' : 'Tap ✕ or tap background to exit'}</span>
+            <span>Tap ✕ or tap background to exit</span>
           </div>
         </div>
       )}

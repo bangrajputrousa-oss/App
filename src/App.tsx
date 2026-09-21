@@ -249,7 +249,7 @@ export default function App() {
         )}
 
         {/* Android Navigation Pill Indicator at bottom of screen */}
-        <div className="w-full bg-[#211F1F] py-1 flex items-center justify-center shrink-0">
+        <div className="w-full bg-[#1F2224] py-1 flex items-center justify-center shrink-0">
           <div className="w-32 h-1 bg-neutral-600 rounded-full" />
         </div>
       </div>
